@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure File Storage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        input[type="file"] {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Secure File Storage</h2>
+        <input type="file" id="fileInput">
+        <button onclick="uploadFile()">Upload</button>
+        <p id="status"></p>
+    </div>
+    
+    <script>
+        function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files.length) {
+                alert("Please select a file first.");
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append("file", file);
+            
+            fetch("/upload", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    'Authorization': 'Bearer YOUR_SECURE_TOKEN'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("status").innerText = data.message;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("File upload failed.");
+            });
+        }
+    </script>
+</body>
+</html>
